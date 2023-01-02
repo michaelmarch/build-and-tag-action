@@ -12,6 +12,7 @@ export default async function createCommit(tools: Toolkit) {
   if (tools.inputs.additional_files) {
     if (tools.inputs.additional_files.indexOf('\n') > -1) {
       additional_files = tools.inputs.additional_files.split('\n').map(async (f: any) => {
+        tools.log.info(`File: ${f}`);
         return {
           path: f,
           mode: '100644',
