@@ -31,7 +31,8 @@ export default async function createCommit(tools: Toolkit) {
       ]
     }
   }
-
+  tools.log.info(`Tools files: ${tools.inputs.additional_files}`);
+  tools.log.info(`Local files: ${additional_files}`);
   tools.log.info('Creating tree')
   const tree = await tools.github.git.createTree({
     ...tools.context.repo,
