@@ -10,27 +10,17 @@ export default async function createCommit(tools: Toolkit) {
 
   let additional_files: any[] = []
   if (tools.inputs.additional_files) {
-    if (tools.inputs.additional_files.indexOf('\n') > -1) {
-      additional_files = tools.inputs.additional_files.split('\n').map(async (f: any) => {
-        tools.log.info(`File: ${f}`);
-        return {
-          path: f,
-          mode: '100644',
-          type: 'blob',
-          content: await readFile(tools.workspace, f)
-        }
-      })
-    } else {
-      additional_files = [
-        {
-          path: tools.inputs.additional_files,
-          mode: '100644',
-          type: 'blob',
-          content: await readFile(tools.workspace, tools.inputs.additional_files)
-        }
-      ]
-    }
+    additional_files = tools.inputs.additional_files.split('\n').map(async (f: any) => {
+      tools.log.info(`File: ${f}`);
+      return {
+        path: f,
+        mode: '100644',
+        type: 'blob',
+        content: await readFile(tools.workspace, f)
+      }
+    })
   }
+  
   tools.log.info(`Tools files: ${tools.inputs.additional_files}`);
   tools.log.info(`Local files: ${additional_files}`);
   tools.log.info('Creating tree')
@@ -49,7 +39,7 @@ export default async function createCommit(tools: Toolkit) {
         type: 'blob',
         content: await readFile(tools.workspace, main)
       },
-      ...additional_files
+      ...(await Promise.all(additional_files))
     ]
   })
 
